@@ -149,13 +149,9 @@ def dijkstra(graph, start, end):
 
 
 def find_shortest_path_for_group(graph, group):
-    """
-    Find the shortest path that connects all nodes in the group.
-    Returns the shortest path and its length.
-    """
     global global_shortest_path
 
-    # Compute all pair shortest paths for nodes in the group
+    # compute all pairs
     pair_shortest_paths = {}
     for i in range(len(group)):
         for j in range(len(group)):
@@ -163,20 +159,19 @@ def find_shortest_path_for_group(graph, group):
                 distance, _ = dijkstra(graph, group[i], group[j])
                 pair_shortest_paths[(group[i], group[j])] = distance
 
-    # Brute-force approach to solve TSP for the group
+    # brute force permutations
     shortest_path_length = float('infinity')
     shortest_path = []
 
-    # Iterate over all possible permutations of nodes in the group
     for perm in permutations(group):
         current_path_length = sum(pair_shortest_paths[(
             perm[i], perm[i+1])] for i in range(len(perm)-1))
-        # Check if current path exceeds the global shortest path
+        # check if current path ≥ the global shortest path
         if current_path_length < shortest_path_length:
             shortest_path_length = current_path_length
             shortest_path = perm
 
-    # Update the global shortest path if needed
+    # update global shortest path
     if shortest_path_length < global_shortest_path:
         global_shortest_path = shortest_path_length
 
